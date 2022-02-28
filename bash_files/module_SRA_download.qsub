@@ -1,3 +1,0 @@
-#! /bin/bash -l
-#$ -P casa -pe omp 8 -cwd -o log_o -e log_e  #qsub_setting
-/restricted/projectnb/casa/mtLin/sratoolkit.2.11.2-centos_linux64/bin/prefetch ${1} #prefetch_path

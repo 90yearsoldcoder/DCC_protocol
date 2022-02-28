@@ -1,0 +1,32 @@
+{
+    "Bash": {
+        "Setting": "#! /bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa -pe omp 8 -cwd -o log_o -e log_e",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "fastqdump_path": {
+        "Setting": "/restricted/projectnb/casa/mtLin/sratoolkit.2.11.2-centos_linux64/bin/fastq-dump",
+        "Hidden": "n",
+        "withslash": "y",
+        "silent": false
+    },
+    "split": {
+        "Setting": "--split-files",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "SRAfilepath": {
+        "Setting": "${1}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}
