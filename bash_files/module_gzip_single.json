@@ -1,0 +1,20 @@
+{
+    "Bash": {
+        "Setting": "#! /bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa -pe omp 8 -cwd -o log_o -e log_e",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "compress": {
+        "Setting": "gzip ${1}_1.fastq",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}
