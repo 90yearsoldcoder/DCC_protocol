@@ -1,0 +1,393 @@
+{
+    "Bash": {
+        "Setting": "#!/bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line2": {
+        "Setting": "module load samtools/1.10",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa -pe omp 16 -cwd -o log.o -e log.e",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line4": {
+        "Setting": "#echo \"$line\"",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line5": {
+        "Setting": "#star.qsub fastqgz_path name_of_cell cell_type",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line6": {
+        "Setting": "fastqgz_path=${1}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line7": {
+        "Setting": "read_1=${2}_1.fastq.gz",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line8": {
+        "Setting": "read_2=${2}_2.fastq.gz",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line9": {
+        "Setting": "name=${2}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line10": {
+        "Setting": "cell_type=${3}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line11": {
+        "Setting": "star_out_dir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "star_out_dir": {
+        "Setting": "/restricted/projectnb/casa/mtLin/Super-seq/Run/DCC-star/${cell_type}",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line13": {
+        "Setting": "STARDir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "STARDir": {
+        "Setting": "/restricted/projectnb/casa/mtLin/DCC/DCC-kit/Linux_x86_64/",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line15": {
+        "Setting": "genomeDir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "genomeDir": {
+        "Setting": "/restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/script/ref/GRCh38/Gencode_v26/GrCh38_100n",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line17": {
+        "Setting": "JAVAOPTS=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "JAVAOPTS": {
+        "Setting": "\"-Xms4g -Xmx8g -XX:ParallelGCThreads=10\"",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line19": {
+        "Setting": "picard=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "picard":{
+        "Setting":"\"/restricted/projectnb/casa/mtLin/DCC_protocol/DCC-kit/picard.jar\"",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line_tmp":{
+        "Setting":"Tmpdir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "Tmpdir":{
+        "Setting":"./tmpdir",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+
+    },
+    "line20": {
+        "Setting": "${STARDir}/STAR --genomeDir ${genomeDir} --runThreadN 16 --readFilesCommand zcat",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line21": {
+        "Setting": "         --readFilesIn ${fastqgz_path}/${read_1} ${fastqgz_path}/${read_2} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line22": {
+        "Setting": "         --outSAMtype BAM SortedByCoordinate ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line23": {
+        "Setting": "         --outFileNamePrefix ${star_out_dir}/sample_sheet/${name}_ ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line24": {
+        "Setting": "         --outSJfilterOverhangMin 15 15 15 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line25": {
+        "Setting": "         --alignSJoverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line26": {
+        "Setting": "         --alignSJDBoverhangMin 15 --outFilterMultimapNmax 20 --outFilterScoreMin 1 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line27": {
+        "Setting": "         --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line28": {
+        "Setting": "         --chimScoreSeparation 10 --chimJunctionOverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line29": {
+        "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line30": {
+        "Setting": "java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Xmx8000M -jar ${picard} BuildBamIndex ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line31": {
+        "Setting": "        I=$star_out_dir/sample_sheet/${name}_Aligned.sortedByCoord.out.bam ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line32": {
+        "Setting": "        TMP_DIR=${Tmpdir}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line33": {
+        "Setting": "${STARDir}/STAR --genomeDir ${genomeDir} --runThreadN 16 --readFilesCommand zcat",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line34": {
+        "Setting": "\t --readFilesIn ${fastqgz_path}/${read_1}  ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line35": {
+        "Setting": "\t --outSAMtype BAM SortedByCoordinate ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line36": {
+        "Setting": "\t --outFileNamePrefix ${star_out_dir}/mate1/${read_1}_ ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line37": {
+        "Setting": "\t --outSJfilterOverhangMin 15 15 15 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line38": {
+        "Setting": "\t --alignSJoverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line39": {
+        "Setting": "\t --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line40": {
+        "Setting": "\t --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line41": {
+        "Setting": "\t --chimScoreSeparation 10 --chimJunctionOverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line42": {
+        "Setting": "\t --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line43": {
+        "Setting": "java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Xmx8000M -jar ${picard} BuildBamIndex ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line44": {
+        "Setting": "\tI=$star_out_dir/mate1/${read_1}_Aligned.sortedByCoord.out.bam ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line45": {
+        "Setting": "\tTMP_DIR=${Tmpdir}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line46": {
+        "Setting": "${STARDir}/STAR --genomeDir ${genomeDir} --runThreadN 16 --readFilesCommand zcat",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line47": {
+        "Setting": "         --readFilesIn ${fastqgz_path}/${read_2} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line48": {
+        "Setting": "         --outSAMtype BAM SortedByCoordinate ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line49": {
+        "Setting": "         --outFileNamePrefix ${star_out_dir}/mate2/${read_2}_ ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line50": {
+        "Setting": "         --outSJfilterOverhangMin 15 15 15 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line51": {
+        "Setting": "         --alignSJoverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line52": {
+        "Setting": "         --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line53": {
+        "Setting": "         --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line54": {
+        "Setting": "         --chimScoreSeparation 10 --chimJunctionOverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line55": {
+        "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line56": {
+        "Setting": "java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Xmx8000M -jar ${picard} BuildBamIndex ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line57": {
+        "Setting": "        I=$star_out_dir/mate2/${read_2}_Aligned.sortedByCoord.out.bam ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line58": {
+        "Setting": "        TMP_DIR=${Tmpdir}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line59": {
+        "Setting": "#echo \"remove fastq....\"",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line60": {
+        "Setting": "#rm -rf /restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/script/MSBB_rep/fastq/${name}.fastq",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line61": {
+        "Setting": "echo \"$name\"",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line62": {
+        "Setting": "echo \"done\"",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}

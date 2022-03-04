@@ -1,0 +1,206 @@
+{
+    "Bash": {
+        "Setting": "#!/bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line2": {
+        "Setting": "module load samtools/1.10",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa -pe omp 16 -cwd -o log.o -e log.e",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line4": {
+        "Setting": "#echo \"$line\"",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line5": {
+        "Setting": "#star.qsub fastqgz_path name_of_cell cell_type",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line6": {
+        "Setting": "fastqgz_path=${1}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line7": {
+        "Setting": "read_1=${2}_1.fastq.gz",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line8": {
+        "Setting": "name=${2}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line9": {
+        "Setting": "cell_type=${3}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line10": {
+        "Setting": "star_out_dir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "star_out_dir": {
+        "Setting": "/restricted/projectnb/casa/mtLin/Super-seq/Run/DCC-star/${cell_type}",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line12": {
+        "Setting": "STARDir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "STARDir": {
+        "Setting": "/restricted/projectnb/casa/mtLin/DCC/DCC-kit/Linux_x86_64/",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line14": {
+        "Setting": "genomeDir",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "genomeDir": {
+        "Setting": "/restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/script/ref/GRCh38/Gencode_v26/GrCh38_100n",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line16": {
+        "Setting": "JAVAOPTS=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "JAVAOPTS": {
+        "Setting": "\"-Xms4g -Xmx8g -XX:ParallelGCThreads=10\"",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line18": {
+        "Setting": "picard=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "picard": {
+        "Setting": "\"/restricted/projectnb/casa/mtLin/DCC_protocol/DCC-kit/picard.jar\"",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line20": {
+        "Setting": "Tmpdir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "Tmpdir": {
+        "Setting": "./tmpdir",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line22": {
+        "Setting": "${STARDir}/STAR --genomeDir ${genomeDir} --runThreadN 16 --readFilesCommand zcat",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line23": {
+        "Setting": "         --readFilesIn ${fastqgz_path}/${read_1} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line24": {
+        "Setting": "         --outSAMtype BAM SortedByCoordinate ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line25": {
+        "Setting": "         --outFileNamePrefix ${star_out_dir}/sample_sheet/${name}_ ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line26": {
+        "Setting": "         --outSJfilterOverhangMin 15 15 15 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line27": {
+        "Setting": "         --alignSJoverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line28": {
+        "Setting": "         --alignSJDBoverhangMin 15 --outFilterMultimapNmax 20 --outFilterScoreMin 1 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line29": {
+        "Setting": "         --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line30": {
+        "Setting": "         --chimScoreSeparation 10 --chimJunctionOverhangMin 15 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line31": {
+        "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line32": {
+        "Setting": "java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Xmx8000M -jar ${picard} BuildBamIndex ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line33": {
+        "Setting": "        I=$star_out_dir/sample_sheet/${name}_Aligned.sortedByCoord.out.bam ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line34": {
+        "Setting": "        TMP_DIR=${Tmpdir}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}
