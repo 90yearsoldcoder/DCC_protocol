@@ -1,0 +1,7 @@
+{
+    "step": 0,
+    "status": "Not Runing",
+    "date": "str(datetime.today())",
+    "download_name": "Not Defined",
+    "user": "Not Defined"
+}
