@@ -9,6 +9,8 @@ import pandas as pd
 import os
 import sys
 import shutil
+import re
+from enviroment import qsub_para
 
 class SraRunTable_helper(object):
     version='beta'
@@ -20,91 +22,27 @@ class SraRunTable_helper(object):
         self.user=user;              #SCC username
         self.download_list= None;
         self.download_name= None   #download_name is the keyword witout space
-        self.prefetch_path='Default'
-        self.qsub_setting='Default'
         self.code=0; #downloading has been done or not
         self.pro_path=sys.path[0]
         self.pwd=os.getcwd()
         
-        #copy module
-        module_source = self.pro_path+"/bash_files/module_SRA_download.qsub"
-        # Destination path
-        destination = self.pwd+"/Cache/SRA_download.qsub"
-        #check if there is a SRA_download.qsub. if there is not, copy one to 
-        if not(os.path.exists(destination)):
-            #make sure destination exist
-            os.makedirs(self.pwd+"/Cache/",exist_ok=True)
-            SraRunTable_helper.module_copy(module_source,destination)
+        #read module
+        #module json path
+        module_json = self.pro_path+"/bash_files/module_SRA_download.json"
+        #Working place json file path
+        pwd_json= self.pwd+"/Cache/SRA_download.json"
+        #Do working place has the json file? if not, read the module json and write a new one
+        os.makedirs(self.pwd+'/Cache',exist_ok=True)
+        if not(os.path.exists(pwd_json)):
+            self.env=qsub_para.read_json("SRA_download", module_json)
+            self.env.write2json(pwd_json)
+        else:
+            self.env=qsub_para.read_json("SRA_download", pwd_json)
         
-        self.prefetch_path=SraRunTable_helper.detect(destination,'#prefetch_path')
-        self.qsub_setting=SraRunTable_helper.detect(destination,'#qsub_setting')
-            
-    def module_copy(source,destination):
-        #copy file from source(a file) to destination(a file)
-        # Copy the content of
-        # source to destination
-        try:
-            shutil.copyfile(source, destination)
-            print("Module copied successfully.")
-            
-        # If source and destination are same
-        except shutil.SameFileError:
-            print("Source and destination represents the same file.")
-         
-        # If destination is a directory.
-        except IsADirectoryError:
-            print("module Destination is not a directory.")
-         
-        # If there is any permission issue
-        except PermissionError:
-            print("Permission denied.")
-         
-        # For other errors
-        #except:
-            #print("Error occurred while copying module file.")
-
-    def detect(file, keyword):
-        #detect the line with keyword
-        #return the line
-        with open(file, "rt") as f:
-            for line in f:
-                if keyword in line:
-                    result_line = line
-        print(len(line), len(keyword))
-        result_line=result_line[0:len(result_line)-len(keyword)-1]
-        return result_line
-                    
-
-    def alter(file,old_str,new_str):
-        #alter the old_str to new_str in file
-        #Caution: this function will revise all same old_str in the file to new_str
-        file_data = ""
-        with open(file, "rt") as f:
-            for line in f:
-                if old_str in line:
-                    line = line.replace(old_str,new_str)
-                file_data += line
-        with open(file,"wb") as f:
-            f.write(bytes(file_data),'utf-8')
     
     def env_setting(self):
-        
-        print("----------------------------------------------------------------------------")
-        print("1. sratoolkit path:"+self.prefetch_path)
-        print("2. qsub setting:"+self.qsub_setting)
-        print("E. Back")
-        print("----------------------------------------------------------------------------")
-        flag=input('What you want to reset: ')
-        if (flag == 'E'): 
-            return None
-        if (flag == '1'):
-            new_prefetch_path=input('Input the new path to prefetch: ')
-            SraRunTable_helper.alter(self.pwd+"Cache/SRA_download.qsub",self.prefetch_path, new_prefetch_path )
-            self.prefetch_path = new_prefetch_path
-        if (flag == '2'):
-            new_qsub_setting=input('Input the new qsub setting: ')
-            SraRunTable_helper.alter(self.pwd+"Cache/SRA_download.qsub",self.qsub_setting, new_qsub_setting )
-            self.qsub_setting = new_qsub_setting
+        pwd_json= self.pwd+"/Cache/SRA_download.json"
+        self.env.set_dic(pwd_json)
             
     def start():
         print('----------------------------------------------------')
@@ -236,14 +174,22 @@ class SraRunTable_helper(object):
     def download_cache(self):
         #download SRA from cache
         
-        #make dir
+        #write qsub file to Cache according to json file
+        pwd_json= self.pwd+"/Cache/SRA_download.qsub"
+        self.env.write2qsub(pwd_json)
+        #print(os.getcwd())
         SRA_file_path='./Sample/'+self.download_name+'/SRA_files'
+        #print(SRA_file_path)
         os.makedirs( SRA_file_path, exist_ok=True)
-        os.chdir('./'+SRA_file_path)
-            
+        os.chdir(SRA_file_path)
+        #print(os.getcwd())
+        
+        #prepare temp.qsub
+        #SraRunTable_helper.module_copy(self.pwd+"/Cache/SRA_download.qsub", os.getcwd()+"/temp.qsub")
+        
         #download
         for SRR in self.download_list:
-            bash='eval qsub '+self.pwd+"/Cache/SRA_download.qsub " + SRR
+            bash="eval qsub "+self.pwd+ "/Cache/SRA_download.qsub " + SRR
             print(bash)
             os.system(bash)
         
@@ -264,7 +210,11 @@ class SraRunTable_helper(object):
         
         print("Read the file")
         self.download_list=selected_list.copy()
-        self.download_name=self.space2dash(path[:-4])
+        #using Regexp to gain the name of txt
+        t=re.compile(r"[^\/]+\.txt")
+        full_name=re.search(t,path)
+        name=full_name.group(0)
+        self.download_name=self.space2dash(name[0:-4])
         #print(self.download_list)
         #print(self.download_name)
         self.download_cache()

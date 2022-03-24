@@ -56,7 +56,32 @@ class qsub_para(object):
             dic = json.load(json_file)
         return qsub_para(name,dic)
         
-        
+    def read_qsub(name, path):
+        '''
+        Parameters
+        ----------
+        name : str
+            name of the qsub file.
+        path : TYPE
+            the path to qsub file
+        Returns
+        -------
+        A qsub_para class containing the dic in the json file.
+        '''
+        dic={}
+        with open(path,'rt') as f:
+            i=1
+            lines=f.readlines()
+            for line in lines:
+                line=line.strip('\n')
+                print(line)
+                if line[-1]=='\\':
+                    dic['line'+str(i)]={'Setting':line[0:-1], 'Hidden':'y', 'withslash': 'y', 'silent':False}
+                else:
+                    dic['line'+str(i)]={'Setting':line, 'Hidden':'y', 'withslash': 'n', 'silent':False}
+                i+=1
+        return qsub_para(name,dic)
+    
     def view_dic(self):
         print("-------------------------------------------")
         for key in self.dic.keys():
@@ -80,6 +105,14 @@ class qsub_para(object):
         if (flag=='y'):
             self.write2json(path)
     
+    def set_dic_p2p(self, key_i, item_i):
+        try:
+            self.dic[key_i]['Setting']=item_i
+        except:
+            print("Fatal Error: cannot change key_i")
+            return 0
+        return 1
+    
     def silent(self, key, path):
         self.dic[key]['silent']=True
         self.write2json(path)
@@ -90,12 +123,15 @@ class qsub_para(object):
                 if (self.dic[key]['silent']==False):
                     if (self.dic[key]['withslash']=='y'):
                         f.write(bytes(self.dic[key]['Setting']+'  ','utf-8'))
+                    elif(self.dic[key]['withslash']=='='):
+                        f.write(bytes(self.dic[key]['Setting'],'utf-8'))
                     else:
                         f.write(bytes(self.dic[key]['Setting']+'\n','utf-8'))
                 
     def write2json(self, path):
         with open(path, "w") as outfile:
             json.dump(self.dic, outfile, indent=4)
+            
     
 if __name__=='__main__':
     qsub_para.init_dic()

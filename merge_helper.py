@@ -36,9 +36,20 @@ class Merge_helper(object):
         print('---------------------------------------------')
         Merge_helper.func(key_value, paired)
         
-    def func(key_value, paired):
+    def func(key_value):
+        paired='d'
         Merge=Merge_helper(key_value, paired)
         Merge.read_SRR_list()
+        
+        if os.path.exists(Merge.pwd+"/Sample/"+Merge.key_value+"/fastqgz/"+Merge.SRR_list[0]+"_2.fastq.gz"):
+            print("I think they are paired-end sequences.")
+            paired='d';
+        else:
+            print("I think they are single-end sequences.")
+            paired='s';
+        
+        Merge.paired=paired
+        
         if (paired=='d'): 
             Merge.write_paired()
         if (paired=='s'):

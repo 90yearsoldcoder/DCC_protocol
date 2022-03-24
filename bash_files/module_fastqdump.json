@@ -23,6 +23,12 @@
         "withslash": "y",
         "silent": false
     },
+    "gzip": {
+        "Setting": "--gzip",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
     "SRAfilepath": {
         "Setting": "${1}",
         "Hidden": "y",
