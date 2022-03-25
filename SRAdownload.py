@@ -8,7 +8,6 @@ Created on Sun Jan 30 14:39:26 2022
 import pandas as pd
 import os
 import sys
-import shutil
 import re
 from enviroment import qsub_para
 
@@ -31,11 +30,14 @@ class SraRunTable_helper(object):
         module_json = self.pro_path+"/bash_files/module_SRA_download.json"
         #Working place json file path
         pwd_json= self.pwd+"/Cache/SRA_download.json"
-        #Do working place has the json file? if not, read the module json and write a new one
+        #Does working place have the json file? if not, read the module json and write a new one
         os.makedirs(self.pwd+'/Cache',exist_ok=True)
         if not(os.path.exists(pwd_json)):
             self.env=qsub_para.read_json("SRA_download", module_json)
+            prefetch_path=self.pro_path+"/DCC-kit/sratoolkit.2.11.2-centos_linux64/bin/prefetch"
+            self.env.set_dic_p2p("prefetch_path", prefetch_path)
             self.env.write2json(pwd_json)
+            
         else:
             self.env=qsub_para.read_json("SRA_download", pwd_json)
         

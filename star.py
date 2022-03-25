@@ -29,31 +29,51 @@ class star_helper():
         #Working place json file path
         pwd_json_single= self.pwd+"/Cache/star_single.json"
         pwd_json_paired= self.pwd+"/Cache/star_paired.json"
-        #Do working place has the json file? if not, read the module json and write a new one
+
         os.makedirs(self.pwd+'/Cache',exist_ok=True)
         os.makedirs(self.pwd+'/Cache/tmpdir',exist_ok=True)
         #create the star working place
         os.makedirs(self.star_out+'/'+self.download_name,exist_ok=True)
-        
+        #Do working place has the json file? if not, read the module json and write a new one
         if not(os.path.exists(pwd_json_single)):
             self.env_single=qsub_para.read_json("star_single", module_json_single)
             #rewrite the output directory of star
             self.env_single.set_dic_p2p('star_out_dir', self.star_out+"/${cell_type}")
             #rewrite the cache file path for star
             self.env_single.set_dic_p2p('Tmpdir', self.pwd+'/Cache/tmpdir')
+            #reset the path of startool to DCC-kit
+            STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
+            self.env_single.set_dic_p2p('STARDir', STARDir)
+            #reset the path of genome index of GrCh38
+            genomeDir=self.pro_path+"/Genome_index/GrCh38_100n"
+            self.env_single.set_dic_p2p('genomeDir', genomeDir)
+            #reset the path of picard
+            picard=self.pro_path+"/DCC-kit/picard.jar"
+            self.env_single.set_dic_p2p('picard', picard)
+            
             self.env_single.write2json(pwd_json_single)
         else:
             self.env_single=qsub_para.read_json("star_single", pwd_json_single)
             
         if not(os.path.exists(pwd_json_paired)):
-            self.env_paired=qsub_para.read_json("star_single", module_json_paired)
+            self.env_paired=qsub_para.read_json("star_paired", module_json_paired)
             #rewrite the output directory of star
             self.env_paired.set_dic_p2p('star_out_dir', self.star_out+"/${cell_type}")
             #rewrite the cache file path for star
             self.env_paired.set_dic_p2p('Tmpdir', self.pwd+'/Cache/tmpdir')
+            #reset the path of startool to DCC-kit
+            STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
+            self.env_paired.set_dic_p2p('STARDir', STARDir)
+            #reset the path of genome index of GrCh38
+            genomeDir=self.pro_path+"/Genome_index/GrCh38_100n"
+            self.env_paired.set_dic_p2p('genomeDir', genomeDir)
+            #reset the path of picard
+            picard=self.pro_path+"/DCC-kit/picard.jar"
+            self.env_paired.set_dic_p2p('picard', picard)
+            
             self.env_paired.write2json(pwd_json_paired)
         else:
-            self.env_paired=qsub_para.read_json("star_single", pwd_json_paired)
+            self.env_paired=qsub_para.read_json("star_paired", pwd_json_paired)
             
             
     def start():
@@ -103,7 +123,7 @@ class star_helper():
             else:
                 bash="eval qsub "+qsub_path_single+" "+gzpath+" "+SRR+" "+self.download_name
                 
-            print(bash)
+            #print(bash)
             os.system(bash)
             
         #listen qstat
