@@ -1,0 +1,104 @@
+{
+    "bash": {
+        "Setting": "#!/bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa  -pe omp 16  -o log.o  -e log.e",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line1": {
+        "Setting": "STARDir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "STARDir": {
+        "Setting": "/restricted/projectnb/casa/bu_brain_rnaseq/hjm_test/step_by_step/script/software/STAR-2.6.1c/bin/Linux_x86_64",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line2": {
+        "Setting": "gDir=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "SA_file_path": {
+        "Setting": "(pwd)/GrCh38_100n",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line3": {
+        "Setting": "ref_fa=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "reference_path": {
+        "Setting": "/restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/script/ref/GRCh38/Gencode_v26/GRCh38.primary_assembly.genome.fa",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line4": {
+        "Setting": "ano_gtf=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "annotation_path": {
+        "Setting": "/restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/script/ref/GRCh38/Gencode_v26/gencode.v26.primary_assembly.annotation.gtf",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line5": {
+        "Setting": "${STARDir}/STAR --runThreadN 16 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line6": {
+        "Setting": "--runMode genomeGenerate ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line7": {
+        "Setting": "--genomeDir ${gDir} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line8": {
+        "Setting": "--genomeFastaFiles ${ref_fa} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line9": {
+        "Setting": "--sjdbGTFfile  ${ano_gtf} ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line10": {
+        "Setting": "--sjdbOverhang 100 ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "line11": {
+        "Setting": "--outFileNamePrefix ${gDir} ",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}
