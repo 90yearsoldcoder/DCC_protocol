@@ -1,0 +1,38 @@
+{
+    "bash": {
+        "Setting": "#!/bin/bash -l",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "qsub_setting": {
+        "Setting": "#$ -P casa -pe omp 8 -cwd -o log.o -e log.e",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line1": {
+        "Setting": "file=${1}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line2": {
+        "Setting": "dest=",
+        "Hidden": "y",
+        "withslash": "=",
+        "silent": false
+    },
+    "dest": {
+        "Setting": "TBD",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
+    "line3": {
+        "Setting": "cp ${file} ${dest}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    }
+}

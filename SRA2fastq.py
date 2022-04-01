@@ -32,6 +32,8 @@ class SRA2fastq_helper(object):
         os.makedirs(self.pwd+'/Cache',exist_ok=True)
         if not(os.path.exists(pwd_json)):
             self.env=qsub_para.read_json("fastqdump", module_json)
+            fastqdump_path=self.pro_path+"/DCC-kit/sratoolkit.2.11.2-centos_linux64/bin/fastq-dump"
+            self.env.set_dic_p2p("fastqdump_path", fastqdump_path)
             self.env.write2json(pwd_json)
         else:
             self.env=qsub_para.read_json("fastqdump", pwd_json)

@@ -182,7 +182,7 @@
     "line31": {
         "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
         "Hidden": "y",
-        "withslash": "y",
+        "withslash": "n",
         "silent": false
     },
     "line32": {

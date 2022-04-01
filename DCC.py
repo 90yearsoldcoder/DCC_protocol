@@ -44,6 +44,16 @@ class DCC_helper(object):
             self.env_single.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2")
             #rewrite the cache file path for dcc
             self.env_single.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
+            #reset the path of DCC
+            DCC_path=self.pro_path+"/DCC-kit/DCC"
+            self.env_single.set_dic_p2p("DCC_path", DCC_path)
+            #reset the gtf-dir
+            gtf_dir=self.pro_path+"/DCC-kit/ref"
+            self.env_single.set_dic_p2p("gtf_dir", gtf_dir)
+            #reset the path of Gh39_path
+            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
+            self.env_single.set_dic_p2p("Gh39_path", Gh39_path)
+                
             self.env_single.write2json(pwd_json_single)
         else:
             self.env_single=qsub_para.read_json("DCC_single", pwd_json_single)
@@ -54,6 +64,16 @@ class DCC_helper(object):
             self.env_paired.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2")
             #rewrite the cache file path for star
             self.env_paired.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
+            #reset the path of DCC
+            DCC_path=self.pro_path+"/DCC-kit/DCC"
+            self.env_paired.set_dic_p2p("DCC_path", DCC_path)
+            #reset the gtf-dir
+            gtf_dir=self.pro_path+"/DCC-kit/ref"
+            self.env_paired.set_dic_p2p("gtf_dir", gtf_dir)
+            #reset the path of Gh39_path
+            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
+            self.env_paired.set_dic_p2p("Gh39_path", Gh39_path)
+            
             self.env_paired.write2json(pwd_json_paired)
         else:
             self.env_paired=qsub_para.read_json("DCC_paired", pwd_json_paired)
