@@ -45,7 +45,7 @@ class DCC_helper(object):
             #rewrite the cache file path for dcc
             self.env_single.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
             #reset the path of DCC
-            DCC_path=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/DCC/"
+            DCC_path=self.pro_path+"/DCC-kit/DCC"
             self.env_single.set_dic_p2p("DCC_path", DCC_path)
             #reset the gtf-dir
             gtf_dir=self.pro_path+"/DCC-kit/ref"
@@ -65,7 +65,7 @@ class DCC_helper(object):
             #rewrite the cache file path for star
             self.env_paired.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
             #reset the path of DCC
-            DCC_path=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/DCC/"
+            DCC_path=self.pro_path+"/DCC-kit/DCC"
             self.env_paired.set_dic_p2p("DCC_path", DCC_path)
             #reset the gtf-dir
             gtf_dir=self.pro_path+"/DCC-kit/ref"

@@ -189,7 +189,7 @@
     "line29": {
         "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
         "Hidden": "y",
-        "withslash": "y",
+        "withslash": "n",
         "silent": false
     },
     "line30": {
@@ -267,7 +267,7 @@
     "line42": {
         "Setting": "\t --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
         "Hidden": "y",
-        "withslash": "y",
+        "withslash": "n",
         "silent": false
     },
     "line43": {
@@ -345,7 +345,7 @@
     "line55": {
         "Setting": "         --genomeLoad LoadAndKeep --limitBAMsortRAM 30000000000 ",
         "Hidden": "y",
-        "withslash": "y",
+        "withslash": "n",
         "silent": false
     },
     "line56": {

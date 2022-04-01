@@ -40,7 +40,7 @@ class Merge_helper(object):
         paired='d'
         Merge=Merge_helper(key_value, paired)
         Merge.read_SRR_list()
-        
+        #print(Merge.pwd+"/Sample/"+Merge.key_value+"/fastqgz/"+Merge.SRR_list[0]+"_2.fastq.gz")
         if os.path.exists(Merge.pwd+"/Sample/"+Merge.key_value+"/fastqgz/"+Merge.SRR_list[0]+"_2.fastq.gz"):
             print("I think they are paired-end sequences.")
             paired='d';
@@ -57,10 +57,10 @@ class Merge_helper(object):
         
     def read_SRR_list(self):
         path='./Cache/'+self.key_value+'.txt' #path of SRR list
-        with open(path, 'rt') as f:
-            lines=f.readlines()
-            for line in lines:
-                self.SRR_list.append(line)
+        with open(path,'rt') as f:
+            for line in f.readlines():
+                self.SRR_list.append(line[:-1])
+                
     def write_paired(self):
         os.makedirs( './Run/DCC/'+self.key_value+'/DCC_InputFiles',exist_ok=True)
         
@@ -105,7 +105,7 @@ class Merge_helper(object):
     def writetofile(self, path, prefix,suffix):
         with open(path,'wb') as f:
             for cellnum in self.SRR_list:
-                 f.write(bytes(prefix+cellnum[0:-1]+suffix+'\n','utf-8'))
+                 f.write(bytes(prefix+cellnum+suffix+'\n','utf-8'))
         
         
         
