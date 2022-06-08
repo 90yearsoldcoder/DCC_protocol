@@ -12,8 +12,8 @@ import re
 from enviroment import qsub_para
 
 class SraRunTable_helper(object):
-    version='beta'
-    def __init__(self, path,user):
+    version='v0.3'
+    def __init__(self, project_name, path,user):
         #path is the path to SraRunTable
         self.path=path;
         if (path!='None'):
@@ -35,7 +35,10 @@ class SraRunTable_helper(object):
         if not(os.path.exists(pwd_json)):
             self.env=qsub_para.read_json("SRA_download", module_json)
             prefetch_path=self.pro_path+"/DCC-kit/sratoolkit.2.11.2-centos_linux64/bin/prefetch"
+            #reset prefetch tool path
             self.env.set_dic_p2p("prefetch_path", prefetch_path)
+            #reset project_name
+            self.env.set_dic_p2p("project_name", project_name)
             self.env.write2json(pwd_json)
             
         else:
@@ -53,7 +56,7 @@ class SraRunTable_helper(object):
        
         SraRunTable_helper.func()
     
-    def func(user='minty'):
+    def func(project_name, user='minty'):
         '''
         This is the entry function for SRAdownload
         Parameters
@@ -74,7 +77,7 @@ class SraRunTable_helper(object):
         
         #enter the path of SraRunTable.txt
         path = input("The path To the SraRunTable.txt(If you already have a SRR_numbertxt, enter'None'): ")
-        Sra = SraRunTable_helper(path,user)
+        Sra = SraRunTable_helper(project_name, path,user)
         
         ###################################
         in_flag=True

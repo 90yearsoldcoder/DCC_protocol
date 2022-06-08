@@ -13,8 +13,8 @@ import re
 from enviroment import qsub_para
 
 class SRA2fastq_helper(object):
-    version="beta"
-    def __init__(self, download_name, user):
+    version="v0.3"
+    def __init__(self, project_name, download_name, user):
         self.download_name=download_name
         self.user=user;              #SCC username
         self.download_list= None
@@ -33,7 +33,10 @@ class SRA2fastq_helper(object):
         if not(os.path.exists(pwd_json)):
             self.env=qsub_para.read_json("fastqdump", module_json)
             fastqdump_path=self.pro_path+"/DCC-kit/sratoolkit.2.11.2-centos_linux64/bin/fastq-dump"
+            #reset the fasqdump tool path
             self.env.set_dic_p2p("fastqdump_path", fastqdump_path)
+            #reset project name
+            self.env.set_dic_p2p("project_name",project_name)
             self.env.write2json(pwd_json)
         else:
             self.env=qsub_para.read_json("fastqdump", pwd_json)
@@ -46,10 +49,10 @@ class SRA2fastq_helper(object):
         print("Version: "+SRA2fastq_helper.version)
         print("I assume SRR documents are in ./Sample/<key_word>/SRA_files/<SRA files> and a SRA_list is in the ./Cache ")
         download_name=input("Please input the keyword(eg. ES_cell):")
+        project_name=input("Please input the project name: ")
+        SRA2fastq_helper.func(project_name, download_name)
         
-        SRA2fastq_helper.func(download_name)
-        
-    def func(download_name, user='minty'):
+    def func(project_name,download_name, user='minty'):
         '''
         Parameters
         ----------
@@ -62,7 +65,7 @@ class SRA2fastq_helper(object):
         download_name,
         code int, 0 or 1
         '''
-        fastq=SRA2fastq_helper(download_name, user)
+        fastq=SRA2fastq_helper(project_name, download_name, user)
         #read the download list
         fastq.readlist()
         #define the path of fastq file

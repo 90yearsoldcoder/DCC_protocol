@@ -13,7 +13,7 @@ import os
 class break_point_recorder():
     version='beta'
     
-    def generate(path_pwd, path_module, user):
+    def generate(path_pwd, path_module, user, project_name):
         #generate a new breakpoint json file
         #nothing is returned
         with open(path_module) as json_file:
@@ -24,6 +24,7 @@ class break_point_recorder():
         dic['date']=str(datetime.today())
         dic['user']=user;
         dic['download_name']='not defined'
+        dic['project_name']=project_name
         
         os.makedirs(path_pwd+'/Cache',exist_ok=True)
         path_json=path_pwd+'/Cache/break_point.json'
@@ -76,5 +77,5 @@ class break_point_recorder():
     
 if __name__=="__main__":
     #test=break_point_recorder.generate('')
-    break_point_recorder.generate('.','module_break_point.json', 'ES_cell', 'minty')
+    break_point_recorder.generate('.','module_break_point.json', 'ES_cell', 'minty', 'casa')
     break_point_recorder.qsub_start('.','ES_cell', 3)
