@@ -45,7 +45,7 @@ class star_helper():
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
             self.env_single.set_dic_p2p('STARDir', STARDir)
             #reset the path of genome index of GrCh38
-            genomeDir=self.pro_path+"/Genome_index/GrCh38_100n"
+            genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n" #self.pro_path+"/Genome_index/GrCh38_100n"
             self.env_single.set_dic_p2p('genomeDir', genomeDir)
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
@@ -65,7 +65,7 @@ class star_helper():
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
             self.env_paired.set_dic_p2p('STARDir', STARDir)
             #reset the path of genome index of GrCh38
-            genomeDir=self.pro_path+"/Genome_index/GrCh38_100n"
+            genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n"   #self.pro_path+"/Genome_index/GrCh38_100n"
             self.env_paired.set_dic_p2p('genomeDir', genomeDir)
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
