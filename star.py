@@ -13,7 +13,7 @@ from enviroment import qsub_para
 
 class star_helper():
     version="beta"
-    def __init__(self, download_name, user):
+    def __init__(self,project_name, download_name, user):
         self.download_name=download_name
         self.user=user;              #SCC username
         #self.download_list= None
@@ -44,12 +44,17 @@ class star_helper():
             #reset the path of startool to DCC-kit
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
             self.env_single.set_dic_p2p('STARDir', STARDir)
+<<<<<<< HEAD
             #reset the path of genome index of GrCh38
             genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n" #self.pro_path+"/Genome_index/GrCh38_100n"
             self.env_single.set_dic_p2p('genomeDir', genomeDir)
+=======
+>>>>>>> 7b0d1f15bf481e982b07bb24150df1e5ac5b8355
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
             self.env_single.set_dic_p2p('picard', picard)
+            #reset project name
+            self.env_single.set_dic_p2p("project_name",project_name)
             
             self.env_single.write2json(pwd_json_single)
         else:
@@ -64,17 +69,30 @@ class star_helper():
             #reset the path of startool to DCC-kit
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
             self.env_paired.set_dic_p2p('STARDir', STARDir)
+<<<<<<< HEAD
             #reset the path of genome index of GrCh38
             genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n"   #self.pro_path+"/Genome_index/GrCh38_100n"
             self.env_paired.set_dic_p2p('genomeDir', genomeDir)
+=======
+>>>>>>> 7b0d1f15bf481e982b07bb24150df1e5ac5b8355
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
             self.env_paired.set_dic_p2p('picard', picard)
+            #reset project name
+            self.env_paired.set_dic_p2p("project_name",project_name)
             
             self.env_paired.write2json(pwd_json_paired)
         else:
             self.env_paired=qsub_para.read_json("star_paired", pwd_json_paired)
-            
+        
+        #reset the seq_len
+        #why I choose this place to reset the length of seq? Because I could reset the length no matter whether the module is download/save
+        #it would not change json file
+        seq_len=input("Please give me the length of the sequence(50, 75, 100): ")
+        #reset the path of genome index of GrCh38
+        genomeDir=self.pro_path+"/Genome_index/GrCh38_"+str(seq_len)+"n"
+        self.env_single.set_dic_p2p('genomeDir', genomeDir)
+        self.env_paired.set_dic_p2p('genomeDir', genomeDir)
             
     def start():
         print('----------------------------------------------------')
@@ -82,10 +100,10 @@ class star_helper():
         print("Version: "+star_helper.version)
         print("I assume fastqgz documents are in ./Sample/<key_word>/fastqgz/ and a SRA_list is in the ./Cache ")
         download_name=input("Please input the keyword(eg. ES_cell):")
-        
-        star_helper.func(download_name)
-    def func(download_name, user='minty'):
-        st=star_helper(download_name, user)
+        project_name=input("Please input the project name: ")
+        star_helper.func(project_name, download_name)
+    def func(project_name, download_name, user='minty'):
+        st=star_helper(project_name, download_name, user)
         st.readlist()
         gzpath=st.pwd+"/Sample/"+st.download_name+"/fastqgz"
         st.run(gzpath)
@@ -120,8 +138,10 @@ class star_helper():
             #single-end ? paired-end?
             if (os.path.exists(SRR_path+"_2.fastq.gz")):
                 bash="eval qsub "+qsub_path_paired+" "+gzpath+" "+SRR+" "+self.download_name
+                print("paired seq")
             else:
                 bash="eval qsub "+qsub_path_single+" "+gzpath+" "+SRR+" "+self.download_name
+                print("single seq")
                 
             #print(bash)
             os.system(bash)

@@ -17,7 +17,7 @@ from enviroment import qsub_para
 
 class copy_fastqgz(object):
     version="v0.2"
-    def __init__(self, origin, dest, download_name, user):
+    def __init__(self,project_name, origin, dest, download_name, user):
         self.download_name= download_name   #download_name is the keyword witout space
         self.code=0; #downloading has been done or not
         self.pro_path=sys.path[0]
@@ -37,6 +37,9 @@ class copy_fastqgz(object):
             #reset the dest path
             #dest=self.pwd+"/Sample/"+self.download_name+"/fastqgz/"
             self.env.set_dic_p2p("dest", self.dest)
+            #reset the project name
+            self.env.set_dic_p2p("project_name",project_name)
+            
             self.env.write2json(pwd_json)
             
         else:
@@ -50,10 +53,12 @@ class copy_fastqgz(object):
         user=input('Username:')
         print("--------------------------")
         dest=os.getcwd()+"/Sample/"+sample_name+"/fastqgz"
-        copy_fastqgz.func(origin,dest,sample_name, user)
+        print("--------------------------")
+        project_name=input("Please input the project name: ")
+        copy_fastqgz.func(project_name, origin,dest,sample_name, user)
         
-    def func(origin, dest, download_name, user='minty'):
-        cf=copy_fastqgz(origin, dest, download_name, user)
+    def func(project_name, origin, dest, download_name, user='minty'):
+        cf=copy_fastqgz(project_name, origin, dest, download_name, user)
         flag=cf.read_dir()
         if (flag==0):
             print("the file list is not decided")

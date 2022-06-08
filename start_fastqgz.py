@@ -39,7 +39,8 @@ class DCC_pipeline():
             print('----------------------')
             print('Starting a new DCC-pipeline.')
             username=input("Please give me your SCC username(for submitting qsub tasks): ")
-            break_point_recorder.generate(self.pwd, self.pro_path+"/bash_files/module_break_point.json",username)
+            project_name=input("Please tell me your SCC project name(eg casa): ")
+            break_point_recorder.generate(self.pwd, self.pro_path+"/bash_files/module_break_point.json",username,project_name)
         
         self.do_steps()
         
@@ -106,7 +107,7 @@ Also, when you are not in the program you could use 'qstat -u username to check 
             sample_name=input("Please give me the name of those samples(eg ES_cell):")
             print("--------------------------")
             dest=os.getcwd()+"/Sample/"+sample_name+"/fastqgz"
-            (download_name, success)=copy_fastqgz.func(origin,dest,sample_name,user=dic['user'])
+            (download_name, success)=copy_fastqgz.func(dic['project_name'],origin,dest,sample_name,user=dic['user'])
             if (success==1):
                 dic['status']='running'
                 dic['download_name']=download_name
@@ -124,7 +125,7 @@ Also, when you are not in the program you could use 'qstat -u username to check 
                 print("You did not convert it")
         '''   
         if (last_step==2):
-            (download_name, success)=star_helper.func(dic['download_name'], user=dic['user'])
+            (download_name, success)=star_helper.func(dic['project_name'],dic['download_name'], user=dic['user'])
             if (success==1):
                 break_point_recorder.qsub_start(self.pwd,3)
             else:
@@ -137,7 +138,7 @@ Also, when you are not in the program you could use 'qstat -u username to check 
         if (last_step==4 or last_step==5):
             p1=input("DCC parameter 1: ")
             p2=input("DCC parameter 2: ")
-            (download_name, success)=DCC_helper.func(dic['download_name'], p1 , p2 ,user=dic['user'])
+            (download_name, success)=DCC_helper.func(dic['project_name'],dic['download_name'], p1 , p2 ,user=dic['user'])
             if (success==1):
                 break_point_recorder.qsub_start(self.pwd,5)
                 print("-----------------------------")

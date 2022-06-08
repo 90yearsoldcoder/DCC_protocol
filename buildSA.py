@@ -11,20 +11,20 @@ from enviroment import qsub_para
 
 class build_index(object):
     version="v0.2"
-    def __init__(self,user):
+    def __init__(self,user,p_name, seq_len):
         self.user=user;
         self.code=0; #downloading has been done or not
         self.pro_path=sys.path[0]
         self.pwd=os.getcwd()
         
-        os.makedirs(self.pro_path+'/Genome_index/GrCh38_100n',exist_ok=True)
+        SA_file_path=self.pro_path+'/Genome_index/GrCh38_'+seq_len+"n"
+        os.makedirs(SA_file_path,exist_ok=True)
         module_json=self.pro_path+"/bash_files/create_index.json"
         self.env=qsub_para.read_json("create_index", module_json)
         #reset STAR dir
         STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
         self.env.set_dic_p2p("STARDir", STARDir)
         #reset genome directory
-        SA_file_path=self.pro_path+'/Genome_index/GrCh38_100n'
         self.env.set_dic_p2p("SA_file_path", SA_file_path)
         #reset reference_path
         reference_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
@@ -32,13 +32,17 @@ class build_index(object):
         #reset annotation_path
         annotation_path=self.pro_path+"/DCC-kit/ref/gencode.v26.primary_assembly.annotation.gtf"
         self.env.set_dic_p2p("annotation_path", annotation_path)
+        #reset sequence length
+        self.env.set_dic_p2p("seq_len", seq_len)
         
     def func(user="minty"):
         print("-------------------------------------")
         print("We are going to build the suffix array for alignments")
         print("Please make sure you have download DCC-kit to the program_path")
         print("-------------------------------------")
-        bi=build_index(user);
+        p_name=input("Your SCC project name(eg casa): ")
+        seq_len=input("The length of your sequence(50, 75, 100):")
+        bi=build_index(user, p_name, seq_len);
         bi.build()
         
     def build(self):

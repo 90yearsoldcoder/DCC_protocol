@@ -5,8 +5,20 @@
         "withslash": "n",
         "silent": false
     },
+    "line0":{
+        "Setting": "#$ -P ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    }, 
+    "project_name":{
+        "Setting": "undefined",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
     "qsub_setting": {
-        "Setting": "#$ -P casa -pe omp 8 -o log.o -e log.e",
+        "Setting": "#$ -pe omp 8 -o log.o -e log.e",
         "Hidden": "n",
         "withslash": "n",
         "silent": false
@@ -48,7 +60,7 @@
         "silent": false
     },
     "DCC_path": {
-        "Setting": "/restricted/projectnb/casa/jmh/RNA-seq/circu_RNA/DCC-0.4.7/DCC",
+        "Setting": "set_in_program",
         "Hidden": "n",
         "withslash": "n",
         "silent": false
@@ -123,13 +135,7 @@
         "Setting": "\t\t-D ",
         "Hidden": "y",
         "withslash": "y",
-        "silent": false
-    },
-    "line22": {
-        "Setting": "\t\t-N  ",
-        "Hidden": "y",
-        "withslash": "y",
-        "silent": false
+        "silent": true
     },
     "line23": {
         "Setting": "\t\t-R ${gtf_dir}/hg_simple_repeat.gtf  ",
@@ -183,7 +189,7 @@
         "Setting": "\t\t-ss ",
         "Hidden": "y",
         "withslash": "y",
-        "silent": false
+        "silent": true
     },
     "line32": {
         "Setting": "\t\t-A ${Gh39_dir} ",

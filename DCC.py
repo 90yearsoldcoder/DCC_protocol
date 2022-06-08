@@ -12,7 +12,7 @@ from enviroment import qsub_para
 
 class DCC_helper(object):
     version="beta"
-    def __init__(self, download_name, user):
+    def __init__(self, project_name, download_name, user):
         self.user=user;              #SCC username
         #self.download_list= None
         self.download_name= download_name   #download_name is the keyword witout space
@@ -53,6 +53,8 @@ class DCC_helper(object):
             #reset the path of Gh39_path
             Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
             self.env_single.set_dic_p2p("Gh39_path", Gh39_path)
+            #reset project name
+            self.env_single.set_dic_p2p("project_name",project_name)
                 
             self.env_single.write2json(pwd_json_single)
         else:
@@ -73,6 +75,8 @@ class DCC_helper(object):
             #reset the path of Gh39_path
             Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
             self.env_paired.set_dic_p2p("Gh39_path", Gh39_path)
+            #reset project name
+            self.env_paired.set_dic_p2p("project_name",project_name)
             
             self.env_paired.write2json(pwd_json_paired)
         else:
@@ -88,11 +92,11 @@ class DCC_helper(object):
         download_name=input("Please input the keyword(eg. ES_cell):")
         p1=input("parameter 1: ")
         p2=input("parameter 2: ")
-        
-        DCC_helper.func(download_name, p1 ,p2)
+        project_name=input("Please input the project name: ")
+        DCC_helper.func(project_name, download_name, p1 ,p2)
     
-    def func(download_name, p1, p2, user='minty'):
-        dc=DCC_helper(download_name, user)
+    def func(project_name, download_name, p1, p2, user='minty'):
+        dc=DCC_helper(project_name, download_name, user)
         dc.readlist()
         #####paired or single?
         paired=False

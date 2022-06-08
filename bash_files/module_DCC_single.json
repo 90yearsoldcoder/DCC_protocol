@@ -5,8 +5,20 @@
         "withslash": "n",
         "silent": false
     },
+    "line0":{
+        "Setting": "#$ -P ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    }, 
+    "project_name":{
+        "Setting": "undefined",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
     "qsub_setting": {
-        "Setting": "#$ -P casa -pe omp 8 -o log.o -e log.e",
+        "Setting": "#$ -pe omp 8 -o log.o -e log.e",
         "Hidden": "n",
         "withslash": "n",
         "silent": false
@@ -121,12 +133,6 @@
     },
     "line21": {
         "Setting": "\t\t-D ",
-        "Hidden": "y",
-        "withslash": "y",
-        "silent": false
-    },
-    "line22": {
-        "Setting": "\t\t-N ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false

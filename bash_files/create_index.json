@@ -5,8 +5,20 @@
         "withslash": "n",
         "silent": false
     },
+    "line0":{
+        "Setting": "#$ -P ",
+        "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "Project":{
+        "Setting": "casa",
+        "Hidden": "n",
+        "withslash": "n",
+        "silent": false
+    },
     "qsub_setting": {
-        "Setting": "#$ -P casa  -pe omp 16  -o log.o  -e log.e",
+        "Setting": "#$ -pe omp 16  -o log.o  -e log.e",
         "Hidden": "n",
         "withslash": "n",
         "silent": false
@@ -90,8 +102,14 @@
         "silent": false
     },
     "line10": {
-        "Setting": "--sjdbOverhang 100 ",
+        "Setting": "--sjdbOverhang ",
         "Hidden": "y",
+        "withslash": "y",
+        "silent": false
+    },
+    "seq_len":{
+        "Setting": "100",
+        "Hidden": "n",
         "withslash": "y",
         "silent": false
     },
