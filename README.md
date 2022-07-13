@@ -6,7 +6,7 @@ The protocol is built based on python and STAR alignment algorithm
 
 
 The manual with figures and details is availiable on https://drive.google.com/file/d/1xSAiqQcKFtrHVmI4W-nmSrejrLLqqk84/view?usp=sharing
-
+Docker is not necessary but prefered
 
 
 -------------------------------------------------------------------------------------------------------------------------
