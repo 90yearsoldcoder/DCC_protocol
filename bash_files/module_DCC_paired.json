@@ -135,7 +135,7 @@
         "Setting": "\t\t-D ",
         "Hidden": "y",
         "withslash": "y",
-        "silent": true
+        "silent": false
     },
     "line23": {
         "Setting": "\t\t-R ${gtf_dir}/hg_simple_repeat.gtf  ",
