@@ -18,7 +18,7 @@
         "silent": false
     },
     "qsub_setting": {
-        "Setting": "#$ -pe omp 8 -o log.o -e log.e",
+        "Setting": "#$ -pe omp 8 -o log.o -e log.e -l h_rt=100:00:00 -l mem_per_core=8G",
         "Hidden": "n",
         "withslash": "n",
         "silent": false
@@ -49,6 +49,12 @@
     },
     "line7": {
         "Setting": "p2=${3}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
+    "line_ind": {
+        "Setting": "ind=${4}",
         "Hidden": "y",
         "withslash": "n",
         "silent": false
@@ -120,7 +126,7 @@
         "silent": false
     },
     "line19": {
-        "Setting": "python2 ${app_dir}/main.py @${cell_type}/DCC_InputFiles/samplesheet -mt1 @${cell_type}/DCC_InputFiles/mate1 -mt2 @${cell_type}/DCC_InputFiles/mate2",
+        "Setting": "python2 ${app_dir}/main.py @${cell_type}/DCC_InputFiles_${ind}/samplesheet -mt1 @${cell_type}/DCC_InputFiles_${ind}/mate1 -mt2 @${cell_type}/DCC_InputFiles_${ind}/mate2",
         "Hidden": "y",
         "withslash": "y",
         "silent": false
@@ -135,7 +141,7 @@
         "Setting": "\t\t-D ",
         "Hidden": "y",
         "withslash": "y",
-        "silent": true
+        "silent": false
     },
     "line23": {
         "Setting": "\t\t-R ${gtf_dir}/hg_simple_repeat.gtf  ",
@@ -144,7 +150,7 @@
         "silent": false
     },
     "line24": {
-        "Setting": "\t\t-an ${gtf_dir}/gencode.v26.primary_assembly.annotation.gtf  ",
+        "Setting": "\t\t-an ${gtf_dir}/agat_combined.gff  ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false
@@ -204,7 +210,7 @@
         "silent": false
     },
     "line34": {
-        "Setting": "\t\t-B @${cell_type}/DCC_InputFiles/bam_files ",
+        "Setting": "\t\t-B @${cell_type}/DCC_InputFiles_${ind}/bam_files ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false

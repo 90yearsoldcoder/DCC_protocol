@@ -12,7 +12,7 @@ from enviroment import qsub_para
 
 class fastq2gz_helper(object):
     version="beta"
-    def __init__(self, download_name, user):
+    def __init__(self, project_name, download_name, user):
         self.download_name=download_name
         self.user=user;              #SCC username
         #self.download_list= None
@@ -31,15 +31,19 @@ class fastq2gz_helper(object):
         os.makedirs(self.pwd+'/Cache',exist_ok=True)
         if not(os.path.exists(pwd_json_single)):
             self.env_single=qsub_para.read_json("gzip_single", module_json_single)
+            #reset project name
+            self.env_single.set_dic_p2p("project_name",project_name)
             self.env_single.write2json(pwd_json_single)
         else:
             self.env_single=qsub_para.read_json("gzip_single", pwd_json_single)
             
         if not(os.path.exists(pwd_json_paired)):
-            self.env_paired=qsub_para.read_json("gzip_single", module_json_paired)
+            self.env_paired=qsub_para.read_json("gzip_paired", module_json_paired)
+            #reset project name
+            self.env_paired.set_dic_p2p("project_name",project_name)
             self.env_paired.write2json(pwd_json_paired)
         else:
-            self.env_paired=qsub_para.read_json("gzip_single", pwd_json_paired)
+            self.env_paired=qsub_para.read_json("gzip_paired", pwd_json_paired)
         
         
     def start():
@@ -51,7 +55,7 @@ class fastq2gz_helper(object):
         
         fastq2gz_helper.func(download_name)
         
-    def func(download_name, user='minty'):
+    def func(project_name, download_name, user='minty'):
         '''
         Parameters
         ----------
@@ -64,7 +68,7 @@ class fastq2gz_helper(object):
         download_name,
         code int, 0 or 1
         '''
-        gz=fastq2gz_helper(download_name, user)
+        gz=fastq2gz_helper(project_name, download_name, user)
         gz.readlist()
         gzpath=gz.pwd+"/Sample/"+gz.download_name+"/fastqgz"
         gz.convert(gzpath)

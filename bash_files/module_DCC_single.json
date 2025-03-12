@@ -53,6 +53,12 @@
         "withslash": "n",
         "silent": false
     },
+    "line_ind": {
+        "Setting": "ind=${4}",
+        "Hidden": "y",
+        "withslash": "n",
+        "silent": false
+    },
     "line8": {
         "Setting": "app_dir=",
         "Hidden": "y",
@@ -120,7 +126,7 @@
         "silent": false
     },
     "line19": {
-        "Setting": "python2 ${app_dir}/main.py @${cell_type}/DCC_InputFiles/samplesheet ",
+        "Setting": "python2 ${app_dir}/main.py @${cell_type}/DCC_InputFiles_${ind}/samplesheet ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false
@@ -144,7 +150,7 @@
         "silent": false
     },
     "line24": {
-        "Setting": "\t\t-an ${gtf_dir}/gencode.v26.primary_assembly.annotation.gtf  ",
+        "Setting": "\t\t-an ${gtf_dir}/agat_combined.gff  ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false
@@ -204,7 +210,7 @@
         "silent": false
     },
     "line34": {
-        "Setting": "\t\t-B @${cell_type}/DCC_InputFiles/bam_files ",
+        "Setting": "\t\t-B @${cell_type}/DCC_InputFiles_${ind}/bam_files ",
         "Hidden": "y",
         "withslash": "y",
         "silent": false
