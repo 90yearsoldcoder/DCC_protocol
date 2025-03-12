@@ -14,6 +14,8 @@ class Merge_helper(object):
         self.paired=paired
         self.SRR_list=[]
         self.pwd=os.getcwd()
+        self.numPerGroup = 100
+
     def start():
         print("This is merge_helper alone without other parts of DCC_helper. Version:", Merge_helper.version)
         print('---------------------------------------------')
@@ -49,11 +51,25 @@ class Merge_helper(object):
             paired='s';
         
         Merge.paired=paired
+
+        Merge.numPerGroup = int(input("The number of Sample per group, for qsub running only(not for phenotype): "))
         
-        if (paired=='d'): 
-            Merge.write_paired()
-        if (paired=='s'):
-            Merge.write_single()
+        st_line = 0
+        ed_line = min(len(Merge.SRR_list), st_line + Merge.numPerGroup) - 1
+        ind = 0
+
+        while (ed_line < len(Merge.SRR_list)):
+            if (paired=='d'): 
+                Merge.write_paired(ind, st_line, ed_line)
+            if (paired=='s'):
+                Merge.write_single(ind, st_line, ed_line)
+            st_line = ed_line + 1
+            ind += 1
+            if ed_line == len(Merge.SRR_list) - 1:
+                break
+            ed_line = min(len(Merge.SRR_list), st_line + Merge.numPerGroup) - 1
+            
+        return ind
         
     def read_SRR_list(self):
         path='./Cache/'+self.key_value+'.txt' #path of SRR list
@@ -61,51 +77,53 @@ class Merge_helper(object):
             for line in f.readlines():
                 self.SRR_list.append(line[:-1])
                 
-    def write_paired(self):
-        os.makedirs( './Run/DCC/'+self.key_value+'/DCC_InputFiles',exist_ok=True)
+    def write_paired(self, ind, st_line, ed_line):
+        os.makedirs( f'./Run/DCC/'+self.key_value + f'/DCC_InputFiles_{ind}',exist_ok=True)
         
         #both junc to samplesheet
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/samplesheet'
+        path='./Run/DCC/'+self.key_value+ f'/DCC_InputFiles_{ind}/samplesheet'
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/sample_sheet/'
         suffix='_Chimeric.out.junction'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         
         #mate1 junc to mate1
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/mate1' 
+        path='./Run/DCC/'+self.key_value+f'/DCC_InputFiles_{ind}/mate1' 
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/mate1/'
         suffix='_1.fastq.gz_Chimeric.out.junction'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         
         #mate2 junc to mate2
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/mate2'
+        path='./Run/DCC/'+self.key_value+f'/DCC_InputFiles_{ind}/mate2'
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/mate2/'
         suffix='_2.fastq.gz_Chimeric.out.junction'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         
         #bam to bam_files
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/bam_files' 
+        path='./Run/DCC/'+self.key_value+f'/DCC_InputFiles_{ind}/bam_files' 
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/sample_sheet/'
         suffix='_Aligned.sortedByCoord.out.bam'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         
-    def write_single(self):
-        os.makedirs( './Run/DCC/'+self.key_value+'/DCC_InputFiles',exist_ok=True)
+    def write_single(self, ind, st_line, ed_line):
+        os.makedirs( './Run/DCC/'+self.key_value+ f'/DCC_InputFiles_{ind}',exist_ok=True)
         
         #both junc to samplesheet
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/samplesheet'
+        path='./Run/DCC/'+self.key_value + f'/DCC_InputFiles_{ind}/samplesheet'
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/sample_sheet/'
         suffix='_Chimeric.out.junction'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         #bam to bam_files
-        path='./Run/DCC/'+self.key_value+'/DCC_InputFiles/bam_files' 
+        path='./Run/DCC/'+self.key_value+f'/DCC_InputFiles_{ind}/bam_files' 
         prefix=self.pwd+'/Run/Star/'+self.key_value+'/sample_sheet/'
         suffix='_Aligned.sortedByCoord.out.bam'
-        self.writetofile(path,prefix,suffix)
+        self.writetofile(path,prefix,suffix, st_line, ed_line)
         
-    def writetofile(self, path, prefix,suffix):
+    def writetofile(self, path, prefix, suffix, st_line, ed_line):
         with open(path,'wb') as f:
-            for cellnum in self.SRR_list:
-                 f.write(bytes(prefix+cellnum+suffix+'\n','utf-8'))
+            for line, cellnum in enumerate(self.SRR_list):
+                if line < st_line or line > ed_line:
+                    continue
+                f.write(bytes(prefix+cellnum+suffix+'\n','utf-8'))
         
         
         

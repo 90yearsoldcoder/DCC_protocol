@@ -1,3 +1,33 @@
+# Special Notes
+Genome: /restricted/projectnb/ad-portal/aknyshov/BU_ADRC_RiboM/DCC_ncRNAatlas_ref/DCC_protocol/Genome_index
+/restricted/projectnb/amp-ad/aknyshov/ncRNAatlas/reference/GRCh38.p14.genome.fa
+/restricted/projectnb/amp-ad/aknyshov/ncRNAatlas/reference/agat_combined.gff
+
+This is a branch version of DCC protocol
+I revised the following files in order to adapt new reference
+1. Genome, and gtf file
+2. DCC.py: 
+    * line 54, /DCC-kit/GRCh38.primary_assembly.genome.fa -> /DCC-kit/GRCh38.p14.genome.fa
+    * line 76, /DCC-kit/GRCh38.primary_assembly.genome.fa -> /DCC-kit/GRCh38.p14.genome.fa
+    
+3. module_DCC_paired.json
+    * line 147, 
+    ```
+    "Setting": "\t\t-an ${gtf_dir}/gencode.v26.primary_assembly.annotation.gtf  ",
+    ```
+    ->
+    ```
+    "Setting": "\t\t-an ${gtf_dir}/agat_combined.gff ",
+    ```
+4. module_DCC_single.json
+    * line 147, 
+    ```
+    "Setting": "\t\t-an ${gtf_dir}/gencode.v26.primary_assembly.annotation.gtf  ",
+    ```
+    ->
+    ```
+    "Setting": "\t\t-an ${gtf_dir}/agat_combined.gff ",
+    ```
 # DCC_protocol
 It is a DCC_protocol for SCC in BU
 If you want to use it without install, please contact Mintao Lin or XiaoLing to acquire the access to https://scc-ondemand1.bu.edu/pun/sys/files/fs/restricted/projectnb/ncrna/
@@ -315,4 +345,3 @@ Type in 1 and set a different parameter setting. They could be calculated at the
 All DCC results could be found in ./Run/DCC/<key_word>/<key_word_p1_p2>
 In this example, results are in DCCtest_path/Run/DCC/ESfastqgz/
  
-

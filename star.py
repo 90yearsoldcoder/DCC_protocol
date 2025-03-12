@@ -23,6 +23,8 @@ class star_helper():
         self.pwd=os.getcwd()
         self.star_out=self.pwd+'/Run/Star'
         
+        print("program_path:", self.pro_path)
+        
         #module json path
         module_json_single = self.pro_path+"/bash_files/module_star_single.json"
         module_json_paired = self.pro_path+"/bash_files/module_star_paired.json"
@@ -44,6 +46,9 @@ class star_helper():
             #reset the path of startool to DCC-kit
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
             self.env_single.set_dic_p2p('STARDir', STARDir)
+            #reset the path of genome index of GrCh38
+            genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n" #self.pro_path+"/Genome_index/GrCh38_100n"
+            self.env_single.set_dic_p2p('genomeDir', genomeDir)
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
             self.env_single.set_dic_p2p('picard', picard)
@@ -62,7 +67,11 @@ class star_helper():
             self.env_paired.set_dic_p2p('Tmpdir', self.pwd+'/Cache/tmpdir')
             #reset the path of startool to DCC-kit
             STARDir=self.pro_path+"/DCC-kit/STAR-2.6.1c/bin/Linux_x86_64/"
+            #print(STARDir)
             self.env_paired.set_dic_p2p('STARDir', STARDir)
+            #reset the path of genome index of GrCh38
+            genomeDir="/restricted/projectnb/ncrna/Genome_index/GrCh38_100n"   #self.pro_path+"/Genome_index/GrCh38_100n"
+            self.env_paired.set_dic_p2p('genomeDir', genomeDir)
             #reset the path of picard
             picard=self.pro_path+"/DCC-kit/picard.jar"
             self.env_paired.set_dic_p2p('picard', picard)
@@ -79,6 +88,7 @@ class star_helper():
         seq_len=input("Please give me the length of the sequence(50, 75, 100): ")
         #reset the path of genome index of GrCh38
         genomeDir=self.pro_path+"/Genome_index/GrCh38_"+str(seq_len)+"n"
+        print(genomeDir)
         self.env_single.set_dic_p2p('genomeDir', genomeDir)
         self.env_paired.set_dic_p2p('genomeDir', genomeDir)
             

@@ -42,7 +42,7 @@
         "silent": false
     },
     "line3": {
-        "Setting": "cp ${file} ${dest}",
+        "Setting": "ln -s ${file} ${dest}",
         "Hidden": "y",
         "withslash": "n",
         "silent": false

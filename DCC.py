@@ -12,24 +12,25 @@ from enviroment import qsub_para
 
 class DCC_helper(object):
     version="beta"
-    def __init__(self, project_name, download_name, user):
+    def __init__(self, project_name, download_name, ind, user):
         self.user=user;              #SCC username
         #self.download_list= None
         self.download_name= download_name   #download_name is the keyword witout space
         self.code=0; #downloading has been done or not
         self.pro_path=sys.path[0]
         self.pwd=os.getcwd()
-        self.samplesheet_path=self.pwd+"/Run/DCC/"+self.download_name+'/DCC_InputFiles/samplesheet' 
-        self.mate1_path=self.pwd+"/Run/DCC/"+self.download_name+'/DCC_InputFiles/mate1' 
-        self.mate2_path=self.pwd+"/Run/DCC/"+self.download_name+'/DCC_InputFiles/mate2' 
+        self.ind = ind
+        self.samplesheet_path=self.pwd+"/Run/DCC/"+self.download_name+f'/DCC_InputFiles_{self.ind}/samplesheet' 
+        self.mate1_path=self.pwd+"/Run/DCC/"+self.download_name+f'/DCC_InputFiles_{self.ind}/mate1' 
+        self.mate2_path=self.pwd+"/Run/DCC/"+self.download_name+f'/DCC_InputFiles_{self.ind}/mate2' 
         self.dcc_out_dir=self.pwd+"/Run/DCC/"
         
         #module json path
         module_json_single = self.pro_path+"/bash_files/module_DCC_single.json"
         module_json_paired = self.pro_path+"/bash_files/module_DCC_paired.json"
         #Working place json file path
-        pwd_json_single= self.pwd+"/Cache/DCC_single.json"
-        pwd_json_paired= self.pwd+"/Cache/DCC_paired.json"
+        pwd_json_single= self.pwd+f"/Cache/DCC_single_{self.ind}.json"
+        pwd_json_paired= self.pwd+f"/Cache/DCC_paired_{self.ind}.json"
         
         
         os.makedirs(self.pwd+'/Cache',exist_ok=True)
@@ -41,9 +42,9 @@ class DCC_helper(object):
         if not(os.path.exists(pwd_json_single)):
             self.env_single=qsub_para.read_json("DCC_single", module_json_single)
             #rewrite the output directory of dcc
-            self.env_single.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2")
+            self.env_single.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2_${ind}")
             #rewrite the cache file path for dcc
-            self.env_single.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
+            self.env_single.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2_${ind}")
             #reset the path of DCC
             DCC_path=self.pro_path+"/DCC-kit/DCC"
             self.env_single.set_dic_p2p("DCC_path", DCC_path)
@@ -51,7 +52,7 @@ class DCC_helper(object):
             gtf_dir=self.pro_path+"/DCC-kit/ref"
             self.env_single.set_dic_p2p("gtf_dir", gtf_dir)
             #reset the path of Gh39_path
-            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
+            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.p14.genome.fa"
             self.env_single.set_dic_p2p("Gh39_path", Gh39_path)
             #reset project name
             self.env_single.set_dic_p2p("project_name",project_name)
@@ -63,9 +64,9 @@ class DCC_helper(object):
         if not(os.path.exists(pwd_json_paired)):
             self.env_paired=qsub_para.read_json("DCC_paired", module_json_paired)
             #rewrite the output directory of star
-            self.env_paired.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2")
+            self.env_paired.set_dic_p2p('output_dir', self.dcc_out_dir+"/${cell_type}_${p1}_${p2}_ver2_${ind}")
             #rewrite the cache file path for star
-            self.env_paired.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2")
+            self.env_paired.set_dic_p2p('tmp_dir', self.dcc_out_dir+"/tmp_dir/${1}_${2}_${3}_ver2_${ind}")
             #reset the path of DCC
             DCC_path=self.pro_path+"/DCC-kit/DCC"
             self.env_paired.set_dic_p2p("DCC_path", DCC_path)
@@ -73,7 +74,7 @@ class DCC_helper(object):
             gtf_dir=self.pro_path+"/DCC-kit/ref"
             self.env_paired.set_dic_p2p("gtf_dir", gtf_dir)
             #reset the path of Gh39_path
-            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.primary_assembly.genome.fa"
+            Gh39_path=self.pro_path+"/DCC-kit/GRCh38.p14.genome.fa"
             self.env_paired.set_dic_p2p("Gh39_path", Gh39_path)
             #reset project name
             self.env_paired.set_dic_p2p("project_name",project_name)
@@ -95,8 +96,9 @@ class DCC_helper(object):
         project_name=input("Please input the project name: ")
         DCC_helper.func(project_name, download_name, p1 ,p2)
     
-    def func(project_name, download_name, p1, p2, user='minty'):
-        dc=DCC_helper(project_name, download_name, user)
+    def func(project_name, download_name, p1, p2, ind, user='minty'):
+        # ind is the group index
+        dc=DCC_helper(project_name, download_name, ind, user)
         dc.readlist()
         #####paired or single?
         paired=False
@@ -121,24 +123,24 @@ class DCC_helper(object):
         
     def run(self, p1, p2, paired):
         #write to qsub file
-        qsub_path_single=self.pwd+"/Cache/DCC_single.qsub"
+        qsub_path_single=self.pwd+f"/Cache/DCC_single_{self.ind}.qsub"
         self.env_single.write2qsub(qsub_path_single)
-        qsub_path_paired=self.pwd+"/Cache/DCC_paired.qsub"
+        qsub_path_paired=self.pwd+f"/Cache/DCC_paired_{self.ind}.qsub"
         self.env_paired.write2qsub(qsub_path_paired)
         ###########################
-        os.makedirs(self.dcc_out_dir+'/'+self.download_name+"/"+self.download_name+"_"+p1+"_"+p2,exist_ok=True)
+        #os.makedirs(self.dcc_out_dir+'/'+self.download_name+"/"+self.download_name+"_"+p1+"_"+p2,exist_ok=True)
         ###########################
         os.chdir(self.dcc_out_dir)
         #qsub DCC2.qsub cell_type p1 p2
         if (paired):
-            bash="qsub "+qsub_path_paired+ " " + self.download_name+ " "+ str(p1)+ " "+ str(p2);
+            bash="qsub "+qsub_path_paired+ " " + self.download_name+ " "+ str(p1)+ " "+ str(p2) + " " + str(self.ind)
         else:
-            bash="qsub "+qsub_path_single+ " " + self.download_name+ " "+ str(p1)+ " "+ str(p2);
+            bash="qsub "+qsub_path_single+ " " + self.download_name+ " "+ str(p1)+ " "+ str(p2) + " " +str(self.ind)
         print(bash);
         os.system(bash);
         
         #listen qstat
-        self.qstat_listen()
+        #self.qstat_listen()
         
         #go back
         os.chdir(self.pwd)

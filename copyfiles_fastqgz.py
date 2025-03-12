@@ -104,7 +104,7 @@ class copy_fastqgz(object):
         os.makedirs(self.dest,exist_ok=True)
         #copy them to dest
         for file in self.copy_list:
-            bash="qsub "+ qsub_path+" "+ self.origin+"/"+file
+            bash="bash "+ qsub_path+" "+ self.origin+"/"+file
             print(bash)
             os.system(bash);
             

@@ -132,19 +132,23 @@ Also, when you are not in the program you could use 'qstat -u username to check 
                 print("You did not start the STAR alignment")
                 
         if (last_step==3):
-            Merge_helper.func(dic['download_name'])
+            numOfGroup = Merge_helper.func(dic['download_name'])
+            dic['numOfGroup'] = numOfGroup
+            break_point_recorder.write(self.pwd,dic)
             break_point_recorder.qsub_start(self.pwd,4)
                 
         if (last_step==4 or last_step==5):
             p1=input("DCC parameter 1: ")
             p2=input("DCC parameter 2: ")
-            (download_name, success)=DCC_helper.func(dic['project_name'],dic['download_name'], p1 , p2 ,user=dic['user'])
+            for i in range(dic["numOfGroup"]):
+                (download_name, success)=DCC_helper.func(dic['project_name'],dic['download_name'], p1 , p2, i, user=dic['user'])
+                if (success==1):
+                    print("-----------------------------")
+                    print(f"DCC for Group {i} is submitted. You could find DCC result in ./Run/DCC/<cell_name>_<p1>_<p2>_{i}")
+                else:
+                    print("You did not start the DCC")
             if (success==1):
-                break_point_recorder.qsub_start(self.pwd,5)
-                print("-----------------------------")
-                print("DCC is submitted. You could find DCC result in ./Run/DCC/<cell_name>_<p1>_<p2>")
-            else:
-                print("You did not start the DCC")
+                    break_point_recorder.qsub_start(self.pwd,5)
                 
             
         
