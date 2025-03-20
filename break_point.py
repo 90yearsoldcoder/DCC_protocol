@@ -58,7 +58,13 @@ class break_point_recorder():
     def update_status(path_pwd):
         dic=break_point_recorder.read(path_pwd)
         qstat=os.popen('qstat -u '+dic['user']).readlines()
-        tasks=len(qstat)-2
+
+        tasks = 0
+        for line in qstat:
+            if ("star_" in line) or ("DCC_" in line):
+                #print(line)
+                tasks += 1
+
         #################
         if tasks<=0:
             dic['status']='finished'
