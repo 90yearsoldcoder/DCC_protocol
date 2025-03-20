@@ -100,17 +100,21 @@ class star_helper():
         download_name=input("Please input the keyword(eg. ES_cell):")
         project_name=input("Please input the project name: ")
         star_helper.func(project_name, download_name)
-    def func(project_name, download_name, user='minty'):
+    def func(project_name, download_name, user='minty', fix=False):
         st=star_helper(project_name, download_name, user)
-        st.readlist()
+        st.readlist(fix)
         gzpath=st.pwd+"/Sample/"+st.download_name+"/fastqgz"
         st.run(gzpath)
         
         return (download_name, st.code)
     
-    def readlist(self):
+    def readlist(self, fix = False):
+        download_name = self.download_name
+        if fix:
+            download_name = 'STAR_fix'
+
         selected_list=[]
-        path_list=self.pwd+"/Cache/"+self.download_name+".txt"
+        path_list=self.pwd+"/Cache/" + download_name + ".txt"
         with open(path_list,'rt') as f:
             for line in f.readlines():
                 selected_list.append(line[:-1])
@@ -154,7 +158,12 @@ class star_helper():
     def qstat_listen(self):
         # it is a listenning funtion. Tracking the tasks not finished.
         qstat=os.popen('qstat -u '+self.user).readlines()
-        tasks=len(qstat)-2
+        tasks=0
+
+        for line in qstat:
+            if ("star_" in line) or ("DCC_" in line):
+                #print(line)
+                tasks += 1
         '''
         for item in qstat:
             print(item,end='$$$')
@@ -168,7 +177,12 @@ class star_helper():
 Leave Right now, Press any other keys.
 Caution: Before starting next part of DCC, please make sure all tasks are done. \n""")
             qstat=os.popen('qstat -u '+self.user).readlines()
-            tasks=len(qstat)-2
+            tasks=0
+
+            for line in qstat:
+                if ("star_" in line) or ("DCC_" in line):
+                    #print(line)
+                    tasks += 1
             print('----------------------------------------')
             print("Tasks are running. Remaining Tasks:")
             print(tasks)

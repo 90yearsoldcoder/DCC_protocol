@@ -1,4 +1,6 @@
 import os
+from break_point import break_point_recorder
+from star import star_helper
 
 def check_missing_files(file_path, prefix_suffix_list):
     missing_files = []
@@ -16,7 +18,14 @@ def check_missing_files(file_path, prefix_suffix_list):
 
     return missing_files
 
+def run_STAR_fix():
+    flag = input("Do you want to resubmit the tasks to fix the STAR failure?(y/n): ")
 
+    if (flag != 'y' and flag != 'Y'):
+        return
+    
+    dic=break_point_recorder.read(os.getcwd())
+    star_helper.func(dic['project_name'],dic['download_name'], user=dic['user'], fix = True)
 
 if __name__ == "__main__":
     current_directory = os.getcwd()
@@ -56,10 +65,15 @@ if __name__ == "__main__":
         print("STAR Alignment result check: Passed")
     else:
         print("STAR Alignment result check: Failed")
-        print("The following samples do not have STAR result: Check the file, Star_fix.txt")
+        print("The following samples do not have STAR result: Check the file, ./Cache/STAR_fix.txt")
         print(missing)
 
-        with open("Star_fix.txt", "w") as f:
+        pwd = os.getcwd()
+        fix_txt_path = os.path.join(pwd, 'Cache', "STAR_fix.txt")
+
+        with open(fix_txt_path, "w") as f:
             for sample_id in missing:
                 f.write(f"{sample_id}\n")
+
+        run_STAR_fix()
                         
