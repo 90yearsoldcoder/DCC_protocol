@@ -1,4 +1,204 @@
-# Special Notes
+# DCC_protocol
+It is a DCC_protocol for SCC in BU.
+If you want to use it without install, please contact Mintao Lin or XiaoLing to acquire the access to [the link](https://scc-ondemand1.bu.edu/pun/sys/files/fs/restricted/projectnb/ad-portal/)<br>
+
+The protocol is built based on [DCC](https://github.com/dieterich-lab/DCC) and [STAR](https://github.com/alexdobin/STAR) alignment. <br>
+
+The manual with figures and details is availiable on https://drive.google.com/file/d/1xSAiqQcKFtrHVmI4W-nmSrejrLLqqk84/view?usp=sharing <br>
+\
+Docker is not necessary but prefered
+
+
+# Dependency
+### 1. DCC-kit
+DCC-kit is an All-in-one integration package, containing all gene references and programs that the pipeline needs.
+```
+cp -r /restricted/projectnb/ad-portal/DCC_protocol .
+```
+It is highly **recommended**.
+
+
+### 2. Settings for developers
+All setting could be modified directly json files in bash_files.
+ 
+Those json files are readable and editable. 
+ 
+* Parameter ‘Setting’ refers to a specific path or setting;
+* Parameter ‘Hidden’ shows the preference whether the setting should be modified. Try not to revise it please.
+* Parameter ‘withslash’ combines the setting with the next setting. It is the guideline for generating qsub files.
+* Parameter ‘silent’ is a redundant parameter for further developing needs.
+
+
+
+# Usage
+## 1. Preparation 
+### 1.1 A **preferred** way: install all-in-one package
+Find a new directory where you want to install the program
+```
+cp -r /restricted/projectnb/ad-portal/DCC_protocol .
+```
+You do not have to install it, if you are in BU SCC and have the permission to get into the ncrna file. The permission could be acquired by E-mail to minty@bu.edu 
+
+### 1.2 The way for developers
+If you don’t want to install the DCC-kit
+```
+git clone https://github.com/90yearsoldcoder/DCC_protocol.git
+```
+Then build the DCC-kit by your own. Check the [document](https://drive.google.com/drive/u/1/search?q=DCC) for more details.
+
+## 2 Prepare your fastq.gz files
+**Note:** You may start from SRA numbers or fastq files as well. please check [document](https://drive.google.com/drive/u/1/search?q=DCC) for more details. However, the document might not be updated to the latest, thus, some new functions are not explained as well as we did in the current `README.md`.<br>
+
+All fastq.gz files should be in only one fold. 
+If they are paired_end samples, their names should be like ‘<samplename>_1.fastq.gz’ and ‘<samplename>_2.fastq.gz’
+If they are single_end samples, their names should be like ‘<samplename>_1.fastq.gz’ 
+Example:
+```
+SRR001_1.fastq.gz //for pair 1
+SRR001_2.fastq.gz //for pair 2
+```
+ 
+
+## 3. Start the pipeline
+Choosing a new directory as your working directory.
+```
+python /path/to/DCC_protocol/start_fastqgz.py
+```
+
+## 4. Follow the pipeline to provide the necessary information
+You may see the following instruction after starting the program
+```
+$ python /restricted/projectnb/ad-portal/DCC_protocol/start_fastqgz.py 
+Hi, I am the DCC_pipeline helper
+Version: v0.2
+Hope you have already read the manual.
+----------------------
+Starting a new DCC-pipeline.
+Please give me your SCC username(for submitting qsub tasks): <user>
+Please tell me your SCC project name(eg casa): <SCC_project>
+```
+Please provide the `<user>` and `<SCC_project>` information
+
+## 5. Follow the pipeline to copy the fastqgz files
+In most cases, we don’t want to do any operation on your original files, so we copy them to the working directory.<br>
+* What you should do is just `entering 1` in the program.<br>
+* Then, it will ask you the path to your original fastq.gz files, and the name of those samples. The name is all defined by you. In our example, I call it `DC1`, which is nonsense. After that, it will double check you choose those samples. You could press y to continue.
+```
+You have finished:  Step 0: begin
+------------------------------------
+What can I do for you:
+1. Go to the next step
+2. Delete records
+3. Enviorment Setting (Not full developed)
+4. Quit the program
+------------------------------------
+Input the number before the function you need: 1
+--------------------------
+Please give me the path to Fastqgz files(eg home/test/samples):/restricted/projectnb/ad-portal/soft_link_to_dataSets/DC1
+Please give me the name of those samples(eg ES_cell):DC1
+--------------------------
+--------------------------
+If those samples are paired-ends, the name should be like <..>_1.fastqgz and <...>_2.fastqgz
+If those samples are single-ends, the name should be like <..>_1.fastqgz
+Example: SRR001_1.fastq.gz, SRR001_2.fastq.gz
+--------------------------
+We detected those samples: 
+['29488_TCX.FCHMLWMDSX2_paired_2.fastq.gz', '246108_paired_1.fastq.gz'.....]
+Do you want to use those samples?(y/n):y
+Saved to /restricted/projectnb/ad-portal/mtlin/DCC_rerun_2024Nov/test_selfCheck/Cache/DC1.txt
+```
+
+## 6. STAR alignment
+* `Enter 1` to do STAR. Paired-end or double-end is selected automatically.<br>
+
+* When your tasks are submitted, you could quit the program and come back later.
+The program will make sure you have finished all tasks before allowing you to start the next step.
+It is a better choice to check the situation of tasks using `watch qstat -u <username>`
+
+* Any time you want to come back and continue, use bash `python /path/to/DCC_protocol/start_fastq.py`
+
+## (Optional) 7. STAR alignment check
+It is likely to have aligment failure due to SCC failure, especially when your sample size is quite large. So we provide script to fix the problem automatically.
+At the same working directory
+```
+$ python /restricted/projectnb/ad-portal/DCC_protocol/check_star.py // run the check script
+Input the sample name: DC1 // enter the sample name
+Single or Paired (S or P): P // enter the paired info
+STAR Alignment result check: Failed  // Do all Alignment pass the check?
+The following samples do not have STAR result: Check the file, ./Cache/STAR_fix.txt
+['1937_TCX.FCHML2TDSX2_paired']
+Do you want to resubmit the tasks to fix the STAR failure?(y/n): y // enter `y` to fix it
+program_path: /restricted/projectnb/ad-portal/DCC_protocol
+Please give me the length of the sequence(50, 75, 100): 100 //length of the fastq file
+Your job 3173970 ("star_paired.qsub") has been submitted
+```
+
+If STAR alignment meets no failure, you will see
+```
+$ python /restricted/projectnb/ad-portal/DCC_protocol/check_star.py 
+Input the sample name: DC1
+Single or Paired (S or P): P
+STAR Alignment result check: Passed
+```
+
+## 8.Generate merge_tables
+* Merge_tables are several tables containing the path to Star results. It will be used for DCC process.
+Enter 1 to do this part. 
+* Since our program is **multi-process** program which split samples into multiple groups to speed it up, the size of the group should be provided. We recommend the size of the group is about `max(10, total number of samples/10)`. The number is actually quite variable; the smaller it is, the faster it goes and more resource it takes.
+
+```
+$ python /restricted/projectnb/ad-portal/DCC_protocol/start_fastqgz.py // resume the process
+Hi, I am the DCC_pipeline helper
+Version: v0.2
+Hope you have already read the manual.
+----------------------
+Recovering the previous running DCC-pipeline.
+----------------------------------------
+Current qsub tasks are finished. You could go to the next step.
+------------------------------------
+You have finished:  Step 3: STAR alignment
+------------------------------------
+What can I do for you:
+1. Go to the next step
+2. Delete records
+3. Enviorment Setting (Not full developed)
+4. Quit the program
+------------------------------------
+Input the number before the function you need: 1
+----------------------------------------
+Current qsub tasks are finished. You could go to the next step.
+I think they are paired-end sequences.
+The number of Samples per group, for qsub running only(not for phenotype): 3 // the group size
+```
+
+## 9.DCC 
+`Enter 1` to move to the DCC step, and type in the parameter 1 and parameter 2.
+The detail of parameter 1 and parameter 2 could be found at https://github.com/dieterich-lab/DCC.
+
+The two parameters refer to the Nr setting in DCC program:
+```
+-NR 5 6 \ MINIMUM COUNT IN ONE REPLICATE [1] AND NUMBER OF REPLICATES THE CANDIDATE HAS TO BE DETECTED IN [2]
+```
+
+## 10. (Optional) DCC result check
+* Sometimes some failures happen due to SCC problem, especially when the sample size is quite large. We provide self check script to fix this.
+```
+$ python /restricted/projectnb/ad-portal/DCC_protocol/check_DCC.py 
+Enter the sample name: DC1 //sample name
+Enter the first parameter: 2 // p1
+Enter the second parameter: 2 // p2
+Error: /restricted/projectnb/ad-portal/mtlin/DCC_rerun_2024Nov/test_selfCheck/Run/DCC/DC1_2_2_ver2_3/CircRNACount does not exist
+/restricted/projectnb/ad-portal/mtlin/DCC_rerun_2024Nov/test_selfCheck/Run/DCC/DC1_2_2_ver2_3 failed
+please run the following command to fix the jobs
+bash DCC_fix/submit.sh
+```
+
+To fix the failure
+```
+bash DCC_fix/submit.sh
+```
+ 
+# DEV Notes
 Genome: /restricted/projectnb/ad-portal/aknyshov/BU_ADRC_RiboM/DCC_ncRNAatlas_ref/DCC_protocol/Genome_index
 /restricted/projectnb/amp-ad/aknyshov/ncRNAatlas/reference/GRCh38.p14.genome.fa
 /restricted/projectnb/amp-ad/aknyshov/ncRNAatlas/reference/agat_combined.gff
@@ -28,320 +228,3 @@ I revised the following files in order to adapt new reference
     ```
     "Setting": "\t\t-an ${gtf_dir}/agat_combined.gff ",
     ```
-# DCC_protocol
-It is a DCC_protocol for SCC in BU
-If you want to use it without install, please contact Mintao Lin or XiaoLing to acquire the access to https://scc-ondemand1.bu.edu/pun/sys/files/fs/restricted/projectnb/ncrna/
-
-The protocol is built based on python and STAR alignment algorithm
-
-
-The manual with figures and details is availiable on https://drive.google.com/file/d/1xSAiqQcKFtrHVmI4W-nmSrejrLLqqk84/view?usp=sharing
-Docker is not necessary but prefered
-
-
--------------------------------------------------------------------------------------------------------------------------
-
-Version 0.3
-
-DCC pipeline
-
-On BU SCC
-
-Xiaoling’s Lab
-2022-3-14
-Mintao Lin
-E-mail: minty@bu.edu
- 
-Preface
-1.Environment Setting	2
-1.1 DCC-kit	2
-1.2 Setting for developers	2
-2. How to use it	3
-2.1 Preparation	3
-2.2 Start from an SRA table	4
-2.3 Start from fastq files	9
-2.4 Start from fastq.gz files	14
-
-
-
-
-
-
-
-
-
-
-1.Environment Setting
-1.1 DCC-kit
-DCC-kit is an All-in-one integration package, containing all gene references and programs that the pipeline needs.
-Download: Bash cp -r /restricted/projectnb/ncrna/DCC_protocol .
-It is highly recommended. More instructions are available in part 2.1
-
-
-1.2 Setting for developers
-All setting could be modified directly json files in bash_files.
- 
-Those json files are readable and editable. 
- 
-Parameter ‘Setting’ refers to a specific path or setting;
-Parameter ‘Hidden’ shows the preference whether the setting should be modified. Try not to revise it please.
-Parameter ‘withslash’ combines the setting with the next setting. It is the guideline for generating qsub files.
-Parameter ‘silent’ is a redundant parameter for further developing needs.
-
-
-
-2. How to use it
-2.1 Preparation 
-2.1.1 Installation
-(1)A preferred way: install all-in-one package
-Find a new directory you want to install the program
-Bash cp -r /restricted/projectnb/ncrna/DCC_protocol .
-You do not have to install it if you are in BU SCC and have the permission to get into the ncrna file. The permission could be acquired by E-mail to minty@bu.edu 
-
-(2)For developers
-If you don’t want to install the DCC-kit
-Bash git clone https://github.com/90yearsoldcoder/DCC_protocol.git
-Then build the DCC-kit by your own.
-
-In this guideline,
-We assumed the program has been download and installed at 
-/restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/
-	Please don’t submit tasks to SCC during using this pipeline. It would be fixed in future release.
-
-2.1.2 Build Star genome index
-It is unnecessary to build genome index if you use the all-in-one package.
-If you want to build your own genome index, follow the instruction below.
-Star alignment needs a suffix array as genome index. You could generate the index manually or use our python script. No matter which way you choose, the index SA file should be in path/to/DCC_protocol/Genome_index/GrCh38_100n/
-We highly recommend you to use our python script and DCC-kit to do this.
-To be specific:
-Bash python /path/to/DCC_pipeline/buildSA.py
-Here, since our program is installed in /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/, 
-we should bash python /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/buildSA.py
- 
-Please, make sure this task is completed before starting the steps below.
-It is unnecessary to generate the index every time you use the pipeline. Once the index files are generated, the files are good enough for any other jobs using this pipeline.
-
-After generating the suffix array, you should modify the script in star.py
- 
-Change those two lines into  self.pro_path+"/Genome_index/GrCh38_100n" 
-2.2 Start from an SRA table
-2.2.1 Download SRR files
-(1) In a blank working folder, upload the SRA table.
-	 
-(2) Open the terminal shell and cd to this working folder. Start the python program.
-Bash python /path/to/DCC_pipeline/start.py 
-Here, since our program is installed in /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/, we should bash python /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/start.py
- 
-
-(3) Type in your SCC username, and you will see the step you have finished.
- 
-
-(4) Type in ‘1’ to start your DCC-pipe. Also, you could delete the previous record of DCC-pipeline running in this folder.
-
-(5) Specify the SRAtable you want to use.
- 
-Here, since the name of our SRAtable is SraRunTable.txt, we type in SraRunTable.txt
- 
-
-(6) Specify what Samples we need
-In most cases, we don’t need all cell samples in the Sratable, so it is very necessary to filter out what we need.
-Now, let’s have a brief look at the data, type in 1 (If you already know what you need, you could omit it):
- 
-If you want to know all columns’ names here, type in 2. (Not necessary)
- 
-
-If you want to know the specific values in a column, type in 3. (Not necessary)
-For example, I am wondering what cell types the table have.
- 
-Obviously, there is only one cell type which is ES cell, but in most cases there are lots of kinds of cell types.
-
-After you decide the key word used for filtering, type in 4.
-Here, we only need ES cells for further DCC, so we type in 4, Cell_type, ES cell
- 
-
-Please type in ‘y’ to save the list and using it for later downloading.
- 
-(7) Downloading SRA documents
-Type in ‘5’ and ‘y’ to download them
- 
-Downloading might take some time.
-When you see this, you can leave or quit the program. 
-The program will make sure you have finished all tasks before allowing you to start the next step.
-
-2.2.2 Convert SRA file to fastq.gz files
-You could come back to the pipeline any time you want, using 
-python /path/to/DCC_pipeline/start.py  in your working directory.
-Here, we bash 
-python /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/start.py
-to continue our pipeline.
- 
-Then type in 1 to convert SRA file to fastqgz.
- 
-Then, wait or quit the program as we did before.
-
-2.2.3 Star alignment
-Type in 1 to do this part. Paired-end or double-end is selected automatically.
-
- 
-Wait or quit it as we did before.
-
-2.2.4 Generate merge_tables
-Merge_tables are several tables containing the path to Star results. It will be used for DCC process.
-Type in 1 to do this part.
-
-2.2.5 DCC 
-Type in 1 to move to the DCC step, and type in the parameter 1 and parameter 2.
-The detail of parameter 1 and parameter 2 could be found at https://github.com/dieterich-lab/DCC.
-
-The two parameters refer to the Nr setting in DCC program:
--NR 5 6 \ MINIMUM COUNT IN ONE REPLICATE [1] AND NUMBER OF REPLICATES THE CANDIDATE HAS TO BE DETECTED IN [2]
- 
-When the task is running, you could quit the program any time you want.
-
-
-If you want to have the result with different parameter settings
-Type in 1 and set a different parameter setting. They could be calculated at the same time.
- 
-
-All DCC results could be found in ./Run/DCC/<key_word>/<key_word_p1_p2>
-In this example, results are in DCCtest_path/Run/DCC/ES_cell/
- 
-
-
-
-
-
-2.3 Start from fastq files
-2.3.1 Prepare your fastq files
-All fastq files should be in only one fold. 
-If they are paired_end samples, their names should be like ‘<samplename>_1.fastq’ and ‘<samplename>_2.fastq’
-If they are single_end samples, their names should be like ‘<samplename>_1.fastq’ 
-Example:
- 
-There could be some unrelated files, like ‘fastqgz’ and ‘log_e’ files in the example. Only fastq files are regarded as our working files.
-
-2.3.2 Start the pipeline
-Choosing a new directory as your working directory.
-Then bash python /path/to/DCC_protocol/start_fastq.py
-Here, our program is installed in /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/
-(as we mentioned in 2.1.1)
-So we bash python /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/start_fastq.py
- 
-
-2.3.2 Copy fastqfiles to working directory
-In most cases, we don’t want to do any operation on your original files, so we copy them to the working directory.
-What you should do is just pressing 1 in the program.
- 
-Then, it will ask you the path to your original fastq files, and the name of those samples.
-The name could be your cells’ name or indicates who gives you the samples balabala.
-In our example, I call it ‘ESfastq’, which is nonsense.
-After that, it will double check you choose those samples. You could press y to continue.
-
-When your tasks are submitted, you could quit the program and come back later.
- 
-When you see this, you can leave or quit the program. 
-The program will make sure you have finished all tasks before allowing you to start the next step.
-It is a better choice to check the situation of tasks using ‘watch qstat -u <username>’
-
-Any time you want to come back and continue, use bash python /path/to/DCC_protocol/start_fastq.py
-
-2.3.3 Convert them into fastqgz files
-Using bash python /path/to/DCC_protocol/start_fastq.py, to come back to the program.
-Then press 1 to do this step.
-
- 
-Same, you could leave the program when the program indicates those tasks are submitted.
-
-
-Other steps below are exactly same with 2.2.3 – 2.2.5
-2.3.4 Star alignment
-Type in 1 to do this part. Paired-end or double-end is selected automatically.
-
- 
-Wait or quit it as we did before.
-
-2.3.4 Generate merge_tables
-Merge_tables are several tables containing the path to Star results. It will be used for DCC process.
-Type in 1 to do this part.
-
-2.3.5 DCC 
-Type in 1 to move to the DCC step, and type in the parameter 1 and parameter 2.
-The detail of parameter 1 and parameter 2 could be found at https://github.com/dieterich-lab/DCC.
-
-The two parameters refer to the Nr setting in DCC program:
--NR 5 6 \ MINIMUM COUNT IN ONE REPLICATE [1] AND NUMBER OF REPLICATES THE CANDIDATE HAS TO BE DETECTED IN [2]
- 
-When the task is running, you could quit the program any time you want.
-
-
-If you want to have the result with different parameter settings
-Type in 1 and set a different parameter setting. They could be calculated at the same time.
- 
-
-All DCC results could be found in ./Run/DCC/<key_word>/<key_word_p1_p2>
-In this example, results are in DCCtest_path/Run/DCC/ESfastq/
- 
-
-2.4 Start from fastq.gz files
-Starting from fastq.gz files is very similar to part 2.3
-2.4.1 Prepare your fastq.gz files
-All fastq.gz files should be in only one fold. 
-If they are paired_end samples, their names should be like ‘<samplename>_1.fastq.gz’ and ‘<samplename>_2.fastq.gz’
-If they are single_end samples, their names should be like ‘<samplename>_1.fastq.gz’ 
-Example:
- 
-
-2.4.2 Start the pipeline
-Choosing a new directory as your working directory.
-Then bash python /path/to/DCC_protocol/start_fastqgz.py
-Here, our program is installed in /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/
-(as we mentioned in 2.1.1)
-So we bash python /restricted/projectnb/casa/mtLin/DCC_protocol/DCC_protocol/start_fastqgz.py
-
-
- 
-
-2.4.2 Copy fastq.gz files to working directory
-In most cases, we don’t want to do any operation on your original files, so we copy them to the working directory.
-What you should do is just pressing 1 in the program.
- 
-Then, it will ask you the path to your original fastq.gz files, and the name of those samples.
-The name could be your cells’ name or indicates who gives you the samples balabala.
-In our example, I call it ‘ESfastqgz’, which is nonsense.
-After that, it will double check you choose those samples. You could press y to continue.
-
-When your tasks are submitted, you could quit the program and come back later.
- 
-When you see this, you can leave or quit the program. 
-The program will make sure you have finished all tasks before allowing you to start the next step.
-It is a better choice to check the situation of tasks using ‘watch qstat -u <username>’
-
-Any time you want to come back and continue, use bash python /path/to/DCC_protocol/start_fastq.py
-Other steps below are exactly same with 2.2.3 – 2.2.5
-2.4.3 Star alignment
-Type in 1 to do this part. Paired-end or double-end is selected automatically.
-
- 
-Wait or quit it as we did before.
-
-2.4.4 Generate merge_tables
-Merge_tables are several tables containing the path to Star results. It will be used for DCC process.
-Type in 1 to do this part.
-
-2.4.5 DCC 
-Type in 1 to move to the DCC step, and type in the parameter 1 and parameter 2.
-The detail of parameter 1 and parameter 2 could be found at https://github.com/dieterich-lab/DCC.
-
-The two parameters refer to the Nr setting in DCC program:
--NR 5 6 \ MINIMUM COUNT IN ONE REPLICATE [1] AND NUMBER OF REPLICATES THE CANDIDATE HAS TO BE DETECTED IN [2]
- 
-When the task is running, you could quit the program any time you want.
-
-
-If you want to have the result with different parameter settings
-Type in 1 and set a different parameter setting. They could be calculated at the same time.
- 
-
-All DCC results could be found in ./Run/DCC/<key_word>/<key_word_p1_p2>
-In this example, results are in DCCtest_path/Run/DCC/ESfastqgz/
- 

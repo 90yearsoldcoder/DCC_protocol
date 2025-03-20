@@ -149,7 +149,11 @@ class DCC_helper(object):
     def qstat_listen(self):
         # it is a listenning funtion. Tracking the tasks not finished.
         qstat=os.popen('qstat -u '+self.user).readlines()
-        tasks=len(qstat)-2
+        tasks=0
+        for line in qstat:
+            if ("star_" in line) or ("DCC_" in line):
+                #print(line)
+                tasks += 1
         '''
         for item in qstat:
             print(item,end='$$$')
@@ -163,7 +167,12 @@ class DCC_helper(object):
 Leave Right now, Press any other keys.
 Caution: Before starting next part of DCC, please make sure all tasks are done. \n""")
             qstat=os.popen('qstat -u '+self.user).readlines()
-            tasks=len(qstat)-2
+            tasks=0
+
+            for line in qstat:
+                if ("star_" in line) or ("DCC_" in line):
+                    #print(line)
+                    tasks += 1
             print('----------------------------------------')
             print("Tasks are running. Remaining Tasks:")
             print(tasks)
